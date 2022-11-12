@@ -64,13 +64,16 @@ app.post("/api/users", async (req, res) => {
 
 app.get("/api/users/:_id/logs", async (req, res) => {
   let logsObject = await userModel.findById(req.params._id)
+  console.log(logsObject)
   let logsLengths = logsObject.log.length
-  // let populate = await logsObject.populate("log").execPopulate() // not working can't populate the data from the model
+  let newlogsArray = await Promise.all(logsObject.log.map(value => exerciceModel.findById(value).then( x => x)))
+  let filteredArray = newlogsArray.map(obj => ({"description":obj.description,"duration":obj.duration,"date":obj.date}))
+  let filteredArrayLength = isNaN(req.query.limit) ? filteredArray : filteredArray.slice(0, req.query.limit)
   let logsRepsonse = {
     "_id": req.params._id,
     "username": logsObject.username,
     "count": logsLengths,
-    "log": logsObject.log
+    "log": filteredArrayLength
   }
   res.status(200).json(logsRepsonse) 
 })
