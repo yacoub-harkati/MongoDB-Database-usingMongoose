@@ -45,6 +45,11 @@ const initUserSchema = new mongoose.Schema({
 let userModel = mongoose.model("User", initUserSchema, "user")
 let exerciceModel = mongoose.model("Exercice", exerciceSchema, "exercice")
 
+app.get("/api/users", async (req, res) => {
+  let listOfAllUsers = await userModel.find({})
+  res.status(200).json(listOfAllUsers)
+})
+
 app.post("/api/users", async (req, res) => {
   try {
     let user = await userModel.create({
