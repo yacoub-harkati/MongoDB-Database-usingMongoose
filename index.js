@@ -80,13 +80,13 @@ app.get("/api/users/:_id/logs", async (req, res) => {
     "count": logsLengths,
     "log": filteredArrayLength
   }
-  res.status(200).json(logsRepsonse) 
+  res.json(logsRepsonse) 
 })
 
 app.post("/api/users/:_id/exercises", async (req, res) => {
   let ExeResponse = await findUserIDAndUpdate(req.params._id, req.body.date, req.body.duration, req.body.description)
   console.log(ExeResponse)
-  res.status(200).json(ExeResponse)
+  res.json(ExeResponse)
 })
 
 
@@ -113,7 +113,7 @@ async function findUserIDAndUpdate(formID, formDate, formDuration, formDescripti
     let response = {
       "_id": exersiceObj["_id"],
       "username": userObj.username,
-      "date": exersiceObj.date,
+      "date": new Date(exersiceObj.date).toDateString(),
       "duration": exersiceObj.duration,
       "description": exersiceObj.description
     }
